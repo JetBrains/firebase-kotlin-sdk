@@ -6,6 +6,10 @@ import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import java.net.URL
 import java.io.InputStream
 
@@ -27,6 +31,10 @@ plugins {
 buildscript {
     dependencies {
         classpath(libs.dokka.base)
+
+        // WA for https://youtrack.jetbrains.com/issue/KT-73357/
+        // remove after updated dependencies will not bring an old version.
+        classpath("org.jetbrains.kotlin:kotlin-compiler-embeddable:${libs.versions.kotlin.get()}")
     }
 }
 
@@ -46,6 +54,25 @@ tasks.withType<AbstractDokkaTask>().configureEach {
         customStyleSheets = listOf(file("documentation/logo-styles.css"))
         footerMessage = dokkaCopyrightMessage
         homepageLink = dokkaHomepageUrl
+    }
+}
+
+fun HasConfigurableKotlinCompilerOptions<*>.configureCompilerOptions() {
+    compilerOptions {
+        val kotlin_api_version: String? by project
+        val kotlin_language_version: String? by project
+
+        kotlin_language_version?.let {
+            println("[${project.name}] Custom LanguageVersion: $it")
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.fromVersion(it))
+        }
+
+        kotlin_api_version?.let {
+            println("[${project.name}] Custom ApiVersion: $it")
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.fromVersion(it))
+        }
+
+        freeCompilerArgs.add("-Xpartial-linkage-loglevel=ERROR")
     }
 }
 
@@ -91,9 +118,13 @@ subprojects {
     apply(plugin = "org.jmailen.kotlinter")
 
     repositories {
-        mavenLocal()
         google()
         mavenCentral()
+
+        val kotlin_repo_url: String? by project
+        kotlin_repo_url?.let { maven(it) }
+
+        mavenLocal()
     }
 
     tasks.withType<Sign>().configureEach {
@@ -154,6 +185,22 @@ subprojects {
 
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
+
+    pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+        configure<KotlinJvmExtension> {
+            configureCompilerOptions()
+        }
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+        configure<KotlinMultiplatformExtension> {
+            configureCompilerOptions()
+        }
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+        configure<KotlinAndroidExtension> {
+            configureCompilerOptions()
+        }
+    }
 }
 
 tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
