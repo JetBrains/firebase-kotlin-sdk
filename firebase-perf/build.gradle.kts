@@ -113,7 +113,7 @@ kotlin {
                 osx.deploymentTarget = libs.versions.macos.deploymentTarget.get()
             }
             framework {
-                baseName = "FirebasePerformance"
+                baseName = "FirebasePerformance_"
             }
             noPodspec()
             pod("FirebasePerformance") {

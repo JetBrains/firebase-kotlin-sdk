@@ -110,7 +110,7 @@ kotlin {
                 osx.deploymentTarget = libs.versions.macos.deploymentTarget.get()
             }
             framework {
-                baseName = "FirebaseConfig"
+                baseName = "FirebaseConfig_"
             }
             noPodspec()
             pod("FirebaseRemoteConfig") {
