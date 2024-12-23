@@ -108,7 +108,7 @@ kotlin {
                 osx.deploymentTarget = libs.versions.macos.deploymentTarget.get()
             }
             framework {
-                baseName = "FirebaseCrashlytics"
+                baseName = "FirebaseCrashlytics_"
             }
             noPodspec()
             pod("FirebaseCrashlytics") {

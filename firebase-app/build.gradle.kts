@@ -110,7 +110,7 @@ kotlin {
                 osx.deploymentTarget = libs.versions.macos.deploymentTarget.get()
             }
             framework {
-                baseName = "FirebaseApp"
+                baseName = "FirebaseApp_"
             }
             noPodspec()
             pod("FirebaseCore") {

@@ -111,7 +111,7 @@ kotlin {
                 osx.deploymentTarget = libs.versions.macos.deploymentTarget.get()
             }
             framework {
-                baseName = "FirebaseStorage"
+                baseName = "FirebaseStorage_"
             }
             noPodspec()
             pod("FirebaseStorage") {

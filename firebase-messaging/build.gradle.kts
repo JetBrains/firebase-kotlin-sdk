@@ -109,7 +109,7 @@ kotlin {
                 osx.deploymentTarget = libs.versions.macos.deploymentTarget.get()
             }
             framework {
-                baseName = "FirebaseMessaging"
+                baseName = "FirebaseMessaging_"
             }
             noPodspec()
             pod("FirebaseMessaging") {
