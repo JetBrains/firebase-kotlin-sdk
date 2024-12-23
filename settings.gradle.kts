@@ -23,13 +23,39 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven { url = uri("https://plugins.gradle.org/m2/") }
+
+        val kotlin_repo_url: String? by settings
+        kotlin_repo_url?.let { maven(it) }
     }
 }
 
 dependencyResolutionManagement {
     repositories {
-        mavenLocal()
         google()
         mavenCentral()
+
+        val kotlin_repo_url: String? by settings
+        kotlin_repo_url?.let { maven(it) }
+
+        mavenLocal()
+    }
+
+    versionCatalogs {
+        create("libs") {
+            val kotlin_version: String? by settings
+            if (kotlin_version != null) {
+                version("kotlin", kotlin_version)
+            }
+
+            val kotlin_language_version: String? by settings
+            if (kotlin_language_version != null) {
+                version("settings-language", kotlin_language_version)
+            }
+
+            val kotlin_api_version: String? by settings
+            if (kotlin_api_version != null) {
+                version("settings-api", kotlin_api_version)
+            }
+        }
     }
 }
