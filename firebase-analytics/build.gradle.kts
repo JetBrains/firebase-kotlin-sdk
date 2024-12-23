@@ -111,6 +111,13 @@ kotlin {
             }
             framework {
                 baseName = "FirebaseAnalytics_"
+                linkerOpts(
+                    "-framework", "FirebaseCore",
+                    "-framework", "FirebaseInstallations",
+                    "-framework", "GoogleAppMeasurement",
+                    "-framework", "GoogleUtilities",
+                    "-framework", "nanopb"
+                )
             }
             noPodspec()
             pod("FirebaseAnalytics") {
