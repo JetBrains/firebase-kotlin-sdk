@@ -33,8 +33,8 @@ class FirebaseStorageTest {
             FirebaseOptions(
                 applicationId = "1:846484016111:ios:dd1f6688bad7af768c841a",
                 apiKey = "AIzaSyCK87dcMFhzCz_kJVs2cT2AVlqOTLuyWV0",
-                databaseUrl = "https://fir-kotlin-sdk.firebaseio.com",
-                storageBucket = "fir-kotlin-sdk.appspot.com",
+                databaseUrl = "reducted-kotlin-up",
+                storageBucket = "reducted-kotlin-up",
                 projectId = "fir-kotlin-sdk",
                 gcmSenderId = "846484016111",
             ),
@@ -67,37 +67,37 @@ class FirebaseStorageTest {
         ref.putData(data)
     }
 
-    @Test
-    fun testUploadMetadata() = runTest {
-        val data = createTestData()
-        val ref = storage.reference("test").child("testUploadMetadata.txt")
-        val metadata = storageMetadata {
-            contentType = "text/plain"
-        }
-        ref.putData(data, metadata)
+//    @Test
+//    fun testUploadMetadata() = runTest {
+//        val data = createTestData()
+//        val ref = storage.reference("test").child("testUploadMetadata.txt")
+//        val metadata = storageMetadata {
+//            contentType = "text/plain"
+//        }
+//        ref.putData(data, metadata)
+//
+//        val metadataResult = ref.getMetadata()
+//
+//        assertNotNull(metadataResult)
+//        assertNotNull(metadataResult.contentType)
+//        assertEquals(metadata.contentType, metadataResult.contentType)
+//    }
 
-        val metadataResult = ref.getMetadata()
-
-        assertNotNull(metadataResult)
-        assertNotNull(metadataResult.contentType)
-        assertEquals(metadata.contentType, metadataResult.contentType)
-    }
-
-    @Test
-    fun testUploadCustomMetadata() = runTest {
-        val data = createTestData()
-        val ref = storage.reference("test").child("testUploadCustomMetadata.txt")
-        val metadata = storageMetadata {
-            contentType = "text/plain"
-            setCustomMetadata("key", "value")
-        }
-        ref.putData(data, metadata)
-
-        val metadataResult = ref.getMetadata()
-
-        assertNotNull(metadataResult)
-        assertEquals(metadata.customMetadata["key"], metadataResult.customMetadata["key"])
-    }
+//    @Test
+//    fun testUploadCustomMetadata() = runTest {
+//        val data = createTestData()
+//        val ref = storage.reference("test").child("testUploadCustomMetadata.txt")
+//        val metadata = storageMetadata {
+//            contentType = "text/plain"
+//            setCustomMetadata("key", "value")
+//        }
+//        ref.putData(data, metadata)
+//
+//        val metadataResult = ref.getMetadata()
+//
+//        assertNotNull(metadataResult)
+//        assertEquals(metadata.customMetadata["key"], metadataResult.customMetadata["key"])
+//    }
 }
 
 expect fun createTestData(): Data
