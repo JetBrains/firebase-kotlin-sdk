@@ -56,7 +56,7 @@ tasks {
             "firebase-installations:updateVersion", "firebase-installations:updateDependencyVersion",
             "firebase-messaging:updateVersion", "firebase-messaging:updateDependencyVersion",
             "firebase-perf:updateVersion", "firebase-perf:updateDependencyVersion",
-            "firebase-storage:updateVersion", "firebase-storage:updateDependencyVersion"
+//            "firebase-storage:updateVersion", "firebase-storage:updateDependencyVersion"
         )
     }
 }
