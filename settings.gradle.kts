@@ -12,7 +12,7 @@ include(
     "firebase-installations",
     "firebase-messaging",
     "firebase-perf",
-    "firebase-storage",
+//    "firebase-storage",
     "test-utils"
 )
 
