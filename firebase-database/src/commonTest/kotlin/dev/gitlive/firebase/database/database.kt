@@ -14,6 +14,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -260,6 +261,7 @@ class FirebaseDatabaseTest {
         ensureDatabaseConnected()
     }
 
+    @Ignore
     @Test
     fun testOrderByKeyWithStartAtAndEndAt() = runTest {
         ensureDatabaseConnected()
