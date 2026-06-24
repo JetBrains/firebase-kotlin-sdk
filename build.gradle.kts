@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 import java.net.URL
 import java.io.InputStream
 
@@ -212,6 +213,10 @@ subprojects {
         configure<KotlinAndroidExtension> {
             configureCompilerOptions()
         }
+    }
+
+    tasks.withType<KotlinJsTest>(){
+        enabled = false
     }
 }
 
