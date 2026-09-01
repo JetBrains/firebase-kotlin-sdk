@@ -336,3 +336,6 @@ subprojects {
         }
     }
 }
+
+tasks.register("updateVersions") {
+}
