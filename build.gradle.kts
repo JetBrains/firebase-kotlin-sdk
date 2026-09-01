@@ -5,6 +5,7 @@ import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaTask
+import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
@@ -85,6 +86,14 @@ subprojects {
     val skipDocumentation = nonDocumentationList.contains(project.name)
     if (!skipDocumentation) {
         apply(plugin = "org.jetbrains.dokka")
+    }
+
+    pluginManager.withPlugin("org.jetbrains.dokka"){
+        configure<DokkaExtension>{
+            dokkaSourceSets.matching { it.name == "jvmMain" }.configureEach {
+                suppress.set(true)
+            }
+        }
     }
 
     this.tasks.withType<DokkaTaskPartial>().configureEach {
