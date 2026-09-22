@@ -191,6 +191,18 @@ kotlin {
     }
 }
 
+if (supportedPlatforms.supportsApple()) {
+    tasks.create<Exec>("launchIosSimulator") {
+        commandLine("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app")
+    }
+
+    tasks.withType<KotlinNativeSimulatorTest>().configureEach {
+        dependsOn("launchIosSimulator")
+        standalone.set(false)
+        device.set("booted")
+    }
+}
+
 fun KotlinNativeTargetWithSimulatorTests.enableKeychainForTests() {
     testRuns.configureEach {
         executionSource.binary.linkerOpts(
