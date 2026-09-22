@@ -193,7 +193,7 @@ kotlin {
 
 if (supportedPlatforms.supportsApple()) {
     tasks.create<Exec>("launchIosSimulator") {
-        commandLine("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app")
+        commandLine("open", "/Applications/Xcode.app/Contents/Applications/DeviceHub.app")
     }
 
     tasks.withType<KotlinNativeSimulatorTest>().configureEach {
