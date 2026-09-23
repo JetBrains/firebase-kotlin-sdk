@@ -192,8 +192,13 @@ kotlin {
 }
 
 if (supportedPlatforms.supportsApple()) {
+    val xcodeDeveloperDir = providers.exec { commandLine("xcode-select", "-p") }
+        .standardOutput.asText.map { it.trim() }
+
     tasks.create<Exec>("launchIosSimulator") {
-        commandLine("open", "/Applications/Xcode.app/Contents/Applications/DeviceHub.app")
+        doFirst {
+            commandLine("open", resolveSimulatorApp(File(xcodeDeveloperDir.get())).absolutePath)
+        }
     }
 
     tasks.withType<KotlinNativeSimulatorTest>().configureEach {
@@ -201,6 +206,16 @@ if (supportedPlatforms.supportsApple()) {
         standalone.set(false)
         device.set("booted")
     }
+}
+
+// Xcode 27 replaced Developer/Applications/Simulator.app with Contents/Applications/DeviceHub.app
+fun resolveSimulatorApp(developerDir: File): File {
+    val candidates = listOf(
+        developerDir.resolve("../Applications/DeviceHub.app").normalize(),
+        developerDir.resolve("Applications/Simulator.app"),
+    )
+    return candidates.firstOrNull { it.exists() }
+        ?: throw GradleException("Could not find a simulator app, tried: ${candidates.joinToString()}")
 }
 
 fun KotlinNativeTargetWithSimulatorTests.enableKeychainForTests() {
