@@ -192,13 +192,18 @@ kotlin {
 }
 
 if (supportedPlatforms.supportsApple()) {
-    val xcodeDeveloperDir = providers.exec { commandLine("xcode-select", "-p") }
-        .standardOutput.asText.map { it.trim() }
-
+    // Opening Simulator.app used to boot a default device as a side effect; Xcode 27's DeviceHub.app
+    // does not, so boot a simulator explicitly (latest iOS runtime iPhone) unless one is already booted
     tasks.create<Exec>("launchIosSimulator") {
-        doFirst {
-            commandLine("open", resolveSimulatorApp(File(xcodeDeveloperDir.get())).absolutePath)
-        }
+        commandLine(
+            "sh", "-c",
+            """
+            xcrun simctl list devices booted | grep -q '(Booted)' && exit 0
+            udid=${'$'}(xcrun simctl list devices available | grep -E '^ +iPhone' | tail -n 1 | grep -oE '[0-9A-F-]{36}')
+            [ -n "${'$'}udid" ] || { echo 'No available iPhone simulator found' >&2; exit 1; }
+            xcrun simctl bootstatus "${'$'}udid" -b
+            """.trimIndent()
+        )
     }
 
     tasks.withType<KotlinNativeSimulatorTest>().configureEach {
@@ -206,16 +211,6 @@ if (supportedPlatforms.supportsApple()) {
         standalone.set(false)
         device.set("booted")
     }
-}
-
-// Xcode 27 replaced Developer/Applications/Simulator.app with Contents/Applications/DeviceHub.app
-fun resolveSimulatorApp(developerDir: File): File {
-    val candidates = listOf(
-        developerDir.resolve("../Applications/DeviceHub.app").normalize(),
-        developerDir.resolve("Applications/Simulator.app"),
-    )
-    return candidates.firstOrNull { it.exists() }
-        ?: throw GradleException("Could not find a simulator app, tried: ${candidates.joinToString()}")
 }
 
 fun KotlinNativeTargetWithSimulatorTests.enableKeychainForTests() {
